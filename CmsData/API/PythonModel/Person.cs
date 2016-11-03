@@ -7,6 +7,7 @@ using CmsData.Codes;
 using UtilityExtensions;
 using Novacode;
 using System.Xml.Linq;
+using System.Reflection;
 
 namespace CmsData
 {
@@ -438,8 +439,12 @@ namespace CmsData
         /// </summary>
         private void ReplaceValue(XElement element, string property, Person person)
         {
-            object replacement = person.GetType().GetProperty(property).GetValue(person, null);
-            element.Value = replacement == null ? "" : replacement.ToString();
+            PropertyInfo propertyInfo = person.GetType().GetProperty(property);
+            if (propertyInfo != null)
+            {
+                object replacement = propertyInfo.GetValue(person, null);
+                element.Value = replacement == null ? "" : replacement.ToString();
+            }
         }
     }
 }
